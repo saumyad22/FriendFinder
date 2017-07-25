@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Friend Page</title>
+
+  <!-- Latest compiled and minified CSS -->
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+
+</head>
+<body>
+<div class="container">
+ <div class="row">
+  
+   <h1>Survey Questions</h1>
+   <hr>
+   <form role="form" id="survey">
+   <h3>About You</h3>
+    <div class="form-group">
+         <label for="name">Name(Required)</label>
+         <input type="text" class="form-control" id="name">
+       </div>
+
+        <div class="form-group">
+         <label for="image">Link to Photo Image (Required)</label>
+          <input type="text" class="form-control" id="image">
+        </div>
+      
+     <hr>
+
+      <div class="form-group">
+        <h4><b>Question 1</b></h4>
+        <label><h4>Your mind is always buzzing with unexplored ideas and plans.</h4></label>
+        <select class="form-control" id="question1">
+          <option>1 (strongly disagree)</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5 (strongly agree)</option>
+          </select>
+        </div>
+      <div class="form-group">
+        <h4><b>Question 2</b></h4>
+        <label><h4>Generally speaking, you rely more on your experience than your imagination.</h4></label>
+        <select class="form-control" id="question2">
+          <option>1 (strongly disagree)</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5 (strongly agree)</option>
+          </select>
+        </div>
+      <div class="form-group">
+        <h4><b>Question 3</b></h4>
+        <label><h4>People can rarely upset you.</h4></label>
+        <select class="form-control" id="question3">
+          <option>1 (strongly disagree)</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5 (strongly agree)</option>
+          </select>
+        </div>
+      <div class="form-group">
+       <h4><b>Question 4</b></h4>
+        <label><h4>You find it easy to stay relaxed and focused even when there is some pressure.</h4></label>
+        <select class="form-control" id="question4">
+          <option>1 (strongly disagree)</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5 (strongly agree)</option>
+          </select>
+        </div>
+      <div class="form-group">
+        <h4><b>Question 5</b></h4>
+        <label><h4>You rarely do something just out of sheer curiosity.</h4></label>
+        <select class="form-control" id="question5">
+          <option>1 (strongly disagree)</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5 (strongly agree)</option>
+          </select>
+        </div>
+      <div class="form-group">
+        <h4><b>Question 6</b></h4>
+        <label><h4>It is often difficult for you to relate to other people’s feelings.</h4></label>
+        <select class="form-control" id="question6">
+          <option>1 (strongly disagree)</option>
+          <option>2</option>
+          <option>3</option>
+          <option>4</option>
+          <option>5 (strongly agree)</option>
+          </select>
+        </div>
+      <button type="submit" class="btn btn-block btn-primary submit" id="submit">Submit</button>
+
+   </form>
+
+ <div class="modal fade" id="friend-modal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+   <hr>
+   <footer class="footer">
+      <div class="container">
+        <p><a href="/api/friends">API Friends List</a> | <a href="https://github.com/saumyad22/FriendFinder">GitHub Repo</a></p>
+      </div>
+    </footer>
+   </div>
+  </div>
+  <script type="text/javascript">
+     
+  $('#submit').on("click", function(){
+    //check to make sure the form is filled out
+    
+    if($("#name").val().trim() === ''){
+      alert('Please enter a name');
+    }
+    else if($("#image").val().trim() === ''){
+      alert('Please enter a link to photo');
+    }
+    else{
+      //empty array to hold the value from the survey questions
+      var answerArray = [];
+      //loop to push the answers from survey to the array (NEED TO UPDATE i< AS QUESTIONS ARE ADDED)
+      for(i=1; i<7; i++){
+        answerArray.push(parseInt($('#question' + i).val().substring(0,1)));
+      }
+      //creating an object to hold the newly entered information
+      var newFriend = 
+      {
+        name: $("#name").val().trim(),
+        photo: $("#image").val().trim(),
+        scores: answerArray
+      };
+      //records the current location (should work after deployment)
+      var currentURL = window.location.origin;
+
+      //add the newly entered information to the friend array
+      $.post(currentURL + "/api/friends", newFriend,
+         function(data){
+         console.log(data);
+        });
+      //access our array of potential friends so we can analyze it for the best match
+      $.ajax({url: currentURL + "/api/friends", method: "GET"}).done(function(res){
+          
+        var bestFriend;
+        var currentBest = 100;
+        var differenceArray = [];
+        //loops through all friends with the exception of the one just created
+        for(i=0; i < res.length - 1; i++){
+          //compares the values from the survey questions and pushes the absolute value of the differences to the difference array
+          for(j=0; j<6; j++){
+            var currentDifference = newFriend.scores[j] - res[i].scores[j];
+            differenceArray.push(Math.abs(currentDifference));
+          }
+          console.log("arr " +differenceArray)
+          //adds the values in the array to give a single value that represents the difference between a potential friend and the current entry
+          var difference = differenceArray.reduce(add, 0);
+          //if the difference is less than any of the previous comparisons, push the current profile to the best match position
+          if(difference < currentBest){
+            bestFriend = res[i];
+            currentBest = difference;
+            differenceArray = [];
+            console.log("diff " +difference);
+          }
+
+          //or just move on
+          else{
+            differenceArray =[];
+          }
+          
+        }
+        //set up the display for the modal
+        var friendName = '<h4>' + bestFriend.name + '<h4>';
+        var friendPic = '<img width="300px" src=' + bestFriend.photo + '>';
+        //show the modal
+        $('#friend-modal').modal('show');
+        $('#friend-modal h4').html(friendName);
+        $('.modal-body').html(friendPic);
+        //clear the entries
+        $('#survey')[0].reset();
+        
+      });
+    }
+return false;
+
+});
+
+function add(a, b){
+  return a+b;
+};
+
+</script>
+
+</body>
+</html>
